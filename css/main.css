@@ -1,0 +1,24 @@
+*{
+   font-family: 'Open Sans', sans-serif;
+}
+.vh100{
+	height: 100vh;
+}
+.authentication{
+    background:linear-gradient(rgba(0, 0, 0, 0.714), rgba(0,0,0,.5)), url(../assets/images/foto-auth.png) no-repeat center center;
+    background-size: cover;
+    max-width:100%;
+    padding: 2em;
+    color: #fff;
+}
+.register{
+    color: #000;
+    background: #f6f6f6;
+}
+.signup{
+    background:linear-gradient(rgba(0, 0, 0, 0.714), rgba(0,0,0,.5)), url(../assets/images/foto-signup.png) no-repeat center center;
+    background-size: cover;
+    max-width:100%;
+    padding: 2em;
+    color: #fff;
+}
