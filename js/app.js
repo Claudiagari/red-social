@@ -23,6 +23,9 @@ $(document).ready(function() {
       // ...
     });
   });
+  $('#login').on('click', function() {
+    firebase.auth().getRedirectResult(perfil());
+  });
   function watcher() {
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
@@ -39,22 +42,25 @@ $(document).ready(function() {
         // ...
       } else {
         // User is signed out.
-        console.log('no existe usuario activo');
+        alert('usuario no registrado');
       }
     });
   }
   watcher();
   function appears() {
-    var content = $('#content');
+    var content = $('.content');
     content.html('<p>Bienvenido<p/><button id="logout">Cerrar Sesión</button>');
     $('#logout').on('click', function() {
       firebase.auth().signOut()
         .then(function() {
-          console.log('Saliendo...');
+          $(location).attr('href', 'signup.html');
         })
         .catch(function(error) {
           console.log(error);
         });
     });
+  }
+  function perfil() {
+    $(location).attr('href', 'view-3.html');
   }
 });
