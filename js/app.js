@@ -54,7 +54,7 @@ $(document).ready(function() {
   watcher();
   function appears() {
     var content = $('.content');
-    content.html('<p>Bienvenido <p/><button id="logout">Cerrar Sesión</button>');
+    content.html('<p>Bienvenido<p/><button class="waves-effect waves-light btn cyan accent-2" id="logout">Cerrar Sesión</button>');
     $('#logout').on('click', function() {
       firebase.auth().signOut()
         .then(function() {
@@ -65,27 +65,17 @@ $(document).ready(function() {
         });
     });
   }
-  
-  $('#btnFacebook').on('click', function() {
-    if (!firebase.auth().currentUser) {
-      var provider = new firebase.auth.FacebookAuthProvider();
-      provider.addScope('public_profile');
-      firebase.auth().signInWithPopup(provider).then(function(result) {
-        var token = result.credential.accessToken;
-        var user = result.user;
-        var name = user.displayName;
+  var provider = new firebase.auth.GoogleAuthProvider();
+  $('#btnGoogle').on('click', function() {
+    firebase.auth().signInWithPopup(provider)
+      .then(function(result) {
+        $(location).attr('href', 'view-3.html');
+        $('.content').append('<img src=\'' + result.user.photoURL + '\'/>');
       }).catch(function(error) {
         var errorCode = error.code;
         var errorMessage = error.message;
         var email = error.email;
         var credential = error.credential;
-        if (errorCode === 'auth/account-exists-with-different-credential') {
-          alert('Es el mismo usuario');
-        }
-        // ...
       });
-    } else {
-      firebase.auth().signOut();
-    }
   });
-});
+}); 
