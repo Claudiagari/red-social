@@ -3,28 +3,34 @@ $(document).ready(function() {
   $('#register').on('click', function() {
     var email = $('#email').val();
     var password = $('#password').val();
-    firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+      .then(function() {
+        alert('Registro realizado');
+      })
+      .catch(function(error) {
       // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      console.log(errorCode);
-      console.log(errorMessage);
-    });
+        alert('Ingrese correo y contraseña valido');
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode);
+        console.log(errorMessage);
+      });
   });
   $('#login').on('click', function() {
     var email2 = $('#email2').val();
     var password2 = $('#password2').val();
-    firebase.auth().signInWithEmailAndPassword(email2, password2).catch(function(error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      console.log(errorCode);
-      console.log(errorMessage);
+    firebase.auth().signInWithEmailAndPassword(email2, password2)
+      .then(function() {
+        $(location).attr('href', 'view-3.html');
+      })
+      .catch(function(error) {
+        alert('Ingrese correo y contraseña valido o Regístrese');
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode);
+        console.log(errorMessage);
       // ...
-    });
-  });
-  $('#login').on('click', function() {
-    firebase.auth().getRedirectResult(perfil());
+      });
   });
   function watcher() {
     firebase.auth().onAuthStateChanged(function(user) {
@@ -42,14 +48,13 @@ $(document).ready(function() {
         // ...
       } else {
         // User is signed out.
-        alert('usuario no registrado');
       }
     });
   }
   watcher();
   function appears() {
     var content = $('.content');
-    content.html('<p>Bienvenido<p/><button id="logout">Cerrar Sesión</button>');
+    content.html('<p>Bienvenido <p/><button id="logout">Cerrar Sesión</button>');
     $('#logout').on('click', function() {
       firebase.auth().signOut()
         .then(function() {
@@ -60,7 +65,27 @@ $(document).ready(function() {
         });
     });
   }
-  function perfil() {
-    $(location).attr('href', 'view-3.html');
-  }
+  
+  $('#btnFacebook').on('click', function() {
+    if (!firebase.auth().currentUser) {
+      var provider = new firebase.auth.FacebookAuthProvider();
+      provider.addScope('public_profile');
+      firebase.auth().signInWithPopup(provider).then(function(result) {
+        var token = result.credential.accessToken;
+        var user = result.user;
+        var name = user.displayName;
+      }).catch(function(error) {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        var email = error.email;
+        var credential = error.credential;
+        if (errorCode === 'auth/account-exists-with-different-credential') {
+          alert('Es el mismo usuario');
+        }
+        // ...
+      });
+    } else {
+      firebase.auth().signOut();
+    }
+  });
 });
